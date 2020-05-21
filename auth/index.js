@@ -63,31 +63,31 @@ passport.use(new ClientPasswordStrategy(verifyClient));
  * application, which is issued an access token to make requests on behalf of
  * the authorizing user.
  */
-passport.use(new BearerStrategy(
-  (accessToken, done) => {
-    db.accessTokens.find(accessToken, (error, token) => {
-      if (error) return done(error);
-      if (!token) return done(null, false);
-      // console.log(token.userId)
-      if (token.userId) {
-        db.users.findById(token.userId, (error, user) => {
-          if (error) return done(error);
-          if (!user) return done(null, false);
-          // To keep this example simple, restricted scopes are not implemented,
-          // and this is just for illustrative purposes.
-          done(null, user, { scope: '*' });
-        });
-      } else {
-        // The request came from a client only since userId is null,
-        // therefore the client is passed back instead of a user.
-        db.clients.findByClientId(token.clientId, (error, client) => {
-          if (error) return done(error);
-          if (!client) return done(null, false);
-          // To keep this example simple, restricted scopes are not implemented,
-          // and this is just for illustrative purposes.
-          done(null, client, { scope: '*' });
-        });
-      }
-    });
-  }
-));
+// passport.use(new BearerStrategy(
+//   (accessToken, done) => {
+//     db.accessTokens.find(accessToken, (error, token) => {
+//       if (error) return done(error);
+//       if (!token) return done(null, false);
+//       // console.log(token.userId)
+//       if (token.userId) {
+//         db.users.findById(token.userId, (error, user) => {
+//           if (error) return done(error);
+//           if (!user) return done(null, false);
+//           // To keep this example simple, restricted scopes are not implemented,
+//           // and this is just for illustrative purposes.
+//           done(null, user, { scope: '*' });
+//         });
+//       } else {
+//         // The request came from a client only since userId is null,
+//         // therefore the client is passed back instead of a user.
+//         db.clients.findByClientId(token.clientId, (error, client) => {
+//           if (error) return done(error);
+//           if (!client) return done(null, false);
+//           // To keep this example simple, restricted scopes are not implemented,
+//           // and this is just for illustrative purposes.
+//           done(null, client, { scope: '*' });
+//         });
+//       }
+//     });
+//   }
+// ));
