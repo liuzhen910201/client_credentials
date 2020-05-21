@@ -60,13 +60,13 @@ server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, done) => {
 // the application. The application issues a token, which is bound to these
 // values.
 
-server.grant(oauth2orize.grant.token((client, user, ares, done) => {
-  const token = utils.getUid(256);
-  db.accessTokens.save(token, user.id, client.clientId, (error) => {
-    if (error) return done(error);
-    return done(null, token);
-  });
-}));
+// server.grant(oauth2orize.grant.token((client, user, ares, done) => {
+//   const token = utils.getUid(256);
+//   db.accessTokens.save(token, user.id, client.clientId, (error) => {
+//     if (error) return done(error);
+//     return done(null, token);
+//   });
+// }));
 
 // Exchange authorization codes for access tokens. The callback accepts the
 // `client`, which is exchanging `code` and any `redirectUri` from the
@@ -75,49 +75,49 @@ server.grant(oauth2orize.grant.token((client, user, ares, done) => {
 // code. The issued access token response can include a refresh token and
 // custom parameters by adding these to the `done()` call
 
-server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
-  db.authorizationCodes.find(code, (error, authCode) => {
-    if (error) return done(error);
-    if (client.id !== authCode.clientId) return done(null, false);
-    if (redirectUri !== authCode.redirectUri) return done(null, false);
+// server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
+//   db.authorizationCodes.find(code, (error, authCode) => {
+//     if (error) return done(error);
+//     if (client.id !== authCode.clientId) return done(null, false);
+//     if (redirectUri !== authCode.redirectUri) return done(null, false);
 
-    const token = utils.getUid(256);
-    db.accessTokens.save(token, authCode.userId, authCode.clientId, (error) => {
-      if (error) return done(error);
-      // Add custom params, e.g. the username
-      let params = { username: authCode.userName };
-      // Call `done(err, accessToken, [refreshToken], [params])` to issue an access token
-      return done(null, token, null, params);
-    });
-  });
-}));
+//     const token = utils.getUid(256);
+//     db.accessTokens.save(token, authCode.userId, authCode.clientId, (error) => {
+//       if (error) return done(error);
+//       // Add custom params, e.g. the username
+//       let params = { username: authCode.userName };
+//       // Call `done(err, accessToken, [refreshToken], [params])` to issue an access token
+//       return done(null, token, null, params);
+//     });
+//   });
+// }));
 
 // Exchange user id and password for access tokens. The callback accepts the
 // `client`, which is exchanging the user's name and password from the
 // authorization request for verification. If these values are validated, the
 // application issues an access token on behalf of the user who authorized the code.
 
-server.exchange(oauth2orize.exchange.password((client, username, password, scope, done) => {
-  // Validate the client
-  db.clients.findByClientId(client.clientId, (error, localClient) => {
-    if (error) return done(error);
-    if (!localClient) return done(null, false);
-    if (localClient.clientSecret !== client.clientSecret) return done(null, false);
-    // Validate the user
-    db.users.findByUsername(username, (error, user) => {
-      if (error) return done(error);
-      if (!user) return done(null, false);
-      if (password !== user.password) return done(null, false);
-      // Everything validated, return the token
-      const token = utils.getUid(256);
-      db.accessTokens.save(token, user.id, client.clientId, (error) => {
-        if (error) return done(error);
-        // Call `done(err, accessToken, [refreshToken], [params])`, see oauth2orize.exchange.code
-        return done(null, token);
-      });
-    });
-  });
-}));
+// server.exchange(oauth2orize.exchange.password((client, username, password, scope, done) => {
+//   // Validate the client
+//   db.clients.findByClientId(client.clientId, (error, localClient) => {
+//     if (error) return done(error);
+//     if (!localClient) return done(null, false);
+//     if (localClient.clientSecret !== client.clientSecret) return done(null, false);
+//     // Validate the user
+//     db.users.findByUsername(username, (error, user) => {
+//       if (error) return done(error);
+//       if (!user) return done(null, false);
+//       if (password !== user.password) return done(null, false);
+//       // Everything validated, return the token
+//       const token = utils.getUid(256);
+//       db.accessTokens.save(token, user.id, client.clientId, (error) => {
+//         if (error) return done(error);
+//         // Call `done(err, accessToken, [refreshToken], [params])`, see oauth2orize.exchange.code
+//         return done(null, token);
+//       });
+//     });
+//   });
+// }));
 
 // Exchange the client id and password/secret for an access token. The callback accepts the
 // `client`, which is exchanging the client's id and password/secret from the
