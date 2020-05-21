@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const errorHandler = require('errorhandler');
 const session = require('express-session');
 const passport = require('passport');
-const routes = require('./routes');
+const routes = require('./routes/');
 
 // Express configuration
 const app = express();
