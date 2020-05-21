@@ -157,34 +157,34 @@ server.exchange(oauth2orize.exchange.clientCredentials((client, scope, done) => 
 // authorization). We accomplish that here by routing through `ensureLoggedIn()`
 // first, and rendering the `dialog` view.
 
-module.exports.authorization = [
-  login.ensureLoggedIn(),
-  server.authorization((clientId, redirectUri, done) => {
-    db.clients.findByClientId(clientId, (error, client) => {
-      if (error) return done(error);
-      // WARNING: For security purposes, it is highly advisable to check that
-      //          redirectUri provided by the client matches one registered with
-      //          the server. For simplicity, this example does not. You have
-      //          been warned.
-      return done(null, client, redirectUri);
-    });
-  }, (client, user, done) => {
-    // Check if grant request qualifies for immediate approval
+// module.exports.authorization = [
+//   login.ensureLoggedIn(),
+//   server.authorization((clientId, redirectUri, done) => {
+//     db.clients.findByClientId(clientId, (error, client) => {
+//       if (error) return done(error);
+//       // WARNING: For security purposes, it is highly advisable to check that
+//       //          redirectUri provided by the client matches one registered with
+//       //          the server. For simplicity, this example does not. You have
+//       //          been warned.
+//       return done(null, client, redirectUri);
+//     });
+//   }, (client, user, done) => {
+//     // Check if grant request qualifies for immediate approval
     
-    // Auto-approve
-    if (client.isTrusted) return done(null, true);
+//     // Auto-approve
+//     if (client.isTrusted) return done(null, true);
     
-    db.accessTokens.findByUserIdAndClientId(user.id, client.clientId, (error, token) => {
-      // Auto-approve
-      if (token) return done(null, true);
-      // Otherwise ask user
-      return done(null, false);
-    });
-  }),
-  (request, response) => {
-    response.render('dialog', { transactionId: request.oauth2.transactionID, user: request.user, client: request.oauth2.client });
-  },
-];
+//     db.accessTokens.findByUserIdAndClientId(user.id, client.clientId, (error, token) => {
+//       // Auto-approve
+//       if (token) return done(null, true);
+//       // Otherwise ask user
+//       return done(null, false);
+//     });
+//   }),
+//   (request, response) => {
+//     response.render('dialog', { transactionId: request.oauth2.transactionID, user: request.user, client: request.oauth2.client });
+//   },
+// ];
 
 // User decision endpoint.
 //
@@ -207,7 +207,7 @@ module.exports.decision = [
 // authenticate when making requests to this endpoint.
 
 module.exports.token = [
-  passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+  passport.authenticate("basic", { session: false }),
   server.token(),
   server.errorHandler(),
 ];
