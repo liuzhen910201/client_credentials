@@ -193,10 +193,10 @@ server.exchange(oauth2orize.exchange.clientCredentials((client, scope, done) => 
 // client, the above grant middleware configured above will be invoked to send
 // a response.
 
-module.exports.decision = [
-  login.ensureLoggedIn(),
-  server.decision(),
-];
+// module.exports.decision = [
+//   login.ensureLoggedIn(),
+//   server.decision(),
+// ];
 
 
 // Token endpoint.
