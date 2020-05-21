@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const errorHandler = require('errorhandler');
 const session = require('express-session');
 const passport = require('passport');
-const routes = require('./routes/');
+const oauth2 = require('./routes/oauth2');
 
 // Express configuration
 const app = express();
@@ -34,7 +34,7 @@ require('./auth');
 
 // app.get('/dialog/authorize', routes.oauth2.authorization);
 // app.post('/dialog/authorize/decision', routes.oauth2.decision);
-app.post('/oauth/token', routes.oauth2.token);
+app.post('/oauth/token', oauth2.token);
 
 // app.get('/api/userinfo', routes.user.info);
 // app.get('/api/clientinfo', routes.client.info);
